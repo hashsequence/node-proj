@@ -3,3 +3,13 @@ JavaScript Implementations of basic Data Structures
 Author : Avery Wong
 
 Practice for programming in JavaScript
+implemented:
+LinkedList,
+RedBlackBST
+
+note : LruCache Implementation is used as reference
+
+LruCacheCitations {
+author : 'Chris Ng',
+url : 'https://chrisrng.svbtle.com/lru-cache-in-javascript'
+}
