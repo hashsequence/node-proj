@@ -7,7 +7,7 @@ function RedBlackBST(key){
   this.m_size = 0;
 }
 
-function Node(key,value,color) {
+function Node(key,value,color,size) {
   this.m_key = key;
   this.m_value = value;
   this.m_color = color;
@@ -16,11 +16,11 @@ function Node(key,value,color) {
   this.m_size = 0;
 }
 
-Node.prototype.size = function(size){
+RedBlackBST.prototype.size = function(node){
   if (node === null) {
     return 0;
   }
-  return this.m_size;
+  return node.m_size;
 }
 
 RedBlackBST.prototype.isRed = function(node) {
@@ -31,26 +31,29 @@ RedBlackBST.prototype.isRed = function(node) {
   }
 }
 
-
-/*BST Search*/
-RedBlackBST.prototype.size = function() {
-  return this.m_size;
+RedBlackBST.prototype.isEmpty() = function() {
+  return root === null;
 }
 
-RedBlackBST.get = function(key)
+RedBlackBST.prototype.sizeOfTree = function() {
+  return this.function(m_root);
+}
+
+/*BST Search*/
+
+RedBlackBST.prototype.get = function(key)
 {
   if (key) {
-    this.root.get(key);
+    this.m_root.getHelper(key);
   }
 }
 
-Node.prototype.get = function(key) {
-  var node = this;
+RedBlackBST.prototype.getHelper = function(node, key) {
   while (node !== null) {
-    if (key < this.m_key) {
-      node = x.m_left;
-    } else if (key > this,key) {
-      node = x.m_right;
+    if (key < node.m_key) {
+      node = node.m_left;
+    } else if (node > node.m_key) {
+      node = nodem_.right;
     } else {
       return node.m_value
     }
@@ -58,6 +61,7 @@ Node.prototype.get = function(key) {
   return null;
 }
 
-RedBlackBST.contains = function(key) {
-  return this.root.get(key) !== null;
+RedBlackBST.prototype.contains(key) {
+  return this.get(key);
 }
+/***insertion***/
