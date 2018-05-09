@@ -1,3 +1,6 @@
+/*original implementation in Java: https://algs4.cs.princeton.edu/33balanced/RedBlackBST.java.html
+
+translated code to javascript for practice purposes*/
 
 const RED = true;
 const BLACK = false;
@@ -185,6 +188,58 @@ RedBlackBST.prototype.deleteMaxHelper = function(node) {
   return this.balance(node);
 }
 
+RedBlackBST.prototype.delete = function(key) {
+  if (key === null || key === undefined) {
+    console.log("key does not exist\n");
+  }
+  if(!this.contains(key)) {
+    console.log("key does not exist\n");
+      return null;
+  }
+
+  if (!this.isRed(this.m_root.m_left) && !this.isRed(this.m_root.m_right)){
+    this.m_root.m_color = RED;
+  }
+
+  this.m_root = this.deleteHelper(this.m_root, key);
+  if(!this.isEmpty()) {
+    this.m_root.m_color = BLACK;
+  }
+  return this.m_root;
+
+}
+
+RedBlackBST.prototype.deleteHelper = function(node, key) {
+  if (key < node.m_key) {
+    if(!this.isRed(node.m_left) && !this.isRed(node.m_left.m_left))
+    {
+      node = this.moveRedLeft(node);
+    }
+    node.m_left = this.deleteHelper(node.m_left, key);
+  }
+  else {
+    if(this.isRed(node.m_left))  {
+      node = this.rotateRight(node);
+    }
+    if((key == node.m_key) && (node.m_right === null || node.m_right === undefined)) {
+      return null;
+    }
+    if(!this.isRed(node.m_right) && !this.isRed(node.m_right.m_left)) {
+      node = this.moveRedRight(node);
+    }
+    if(key == node.m_key) {
+      var x = this.min(node.m_right);
+      node.m_key = x.m_key;
+      node.m_value = x.m_value;
+      node.m_right = this.deleteMinHelper(node.m_right);
+    }
+    else {
+      node.m_right = this.deleteHelper(node.m_right, key);
+    }
+    return this.balance(node);
+
+  }
+}
 
 /**************************
 Red-Black tree helper functions
@@ -254,6 +309,63 @@ RedBlackBST.prototype.balance = function(node) {
   }
   node.m_size = this.size(node.m_left) + this.size(node.m_right) + 1;
   return node;
+}
+/**functions to determine properties of tree**/
+RedBlackBST.prototype.minOfTree = function() {
+  if (this.isEmpty()) {
+    console.log("there is no mininum on empty tree\n")
+    return;
+  }
+  return this.min(this.m_root).m_key;
+}
+
+RedBlackBST.prototype.min = function(node) {
+  if(node.m_left === null || node.m_left === undefined) {
+    return node;
+  }
+  else {
+    return this.min(node.m_left);
+  }
+}
+
+RedBlackBST.prototype.maxOfTree = function() {
+  if (this.isEmpty()) {
+    console.log("there is no maximum on empty tree\n")
+    return;
+  }
+  return this.max(this.m_root).m_key;
+}
+
+RedBlackBST.prototype.max = function(node) {
+  if(node.m_right === null || node.m_right === undefined) {
+    return node;
+  }
+  else {
+    return this.max(node.m_right);
+  }
+}
+/*iterating through tree*/
+/*inorder traversal returns array with keys*/
+RedBlackBST.prototype.inOrderTraversal= function() {
+  var arr = [];
+  this.inOrderTraversalHelper(arr, this.m_root);
+  return arr;
+}
+
+RedBlackBST.prototype.inOrderTraversalHelper = function(arr, node) {
+  if (node === null || node === undefined) {
+    return null;
+  }
+  this.inOrderTraversalHelper(arr, node.m_left);
+  arr.push(node.m_key);
+  this.inOrderTraversalHelper(arr, node.m_right);
+  return arr;
+}
+
+RedBlackBST.prototype.getObjects = function(arr) {
+  var arr1 = []
+  arr.forEach((key) => {arr1.push(this.get(key))});
+  return arr1;
 }
 /**testing**/
 var bst1 = new RedBlackBST();
@@ -328,4 +440,29 @@ console.log(JSON.stringify(bst1.m_root));
 bst1.deleteMin();
 console.log(JSON.stringify(bst1.m_root));
 bst1.deleteMin();
+console.log(JSON.stringify(bst1.m_root));
+bst1.put(3,3);
+
+bst1.put(5,5);
+
+bst1.put(7,7);
+
+bst1.put(1,1);
+
+bst1.put(8,8);
+
+bst1.put(9,222);
+
+bst1.put(11,11);
+
+bst1.put(2,2);
+var arr = bst1.inOrderTraversal();
+console.log(`this is my array of keys: ${arr}`);
+var arr1 = bst1.getObjects(arr);
+console.log(`this is my array of objects: ${arr1}`);
+console.log(JSON.stringify(bst1.m_root));
+console.log(bst1.maxOfTree());
+console.log(bst1.minOfTree());
+bst1.delete(12);
+bst1.delete(8);
 console.log(JSON.stringify(bst1.m_root));
