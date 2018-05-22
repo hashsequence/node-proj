@@ -1,6 +1,5 @@
-const request = require('request');
 const yargs = require('yargs');
-
+const geocode = require('./geocode/geocode');
 const argv = yargs
 .options({
   a : {
@@ -14,20 +13,62 @@ const argv = yargs
 .help()
 .alias('help','h')
 .argv;
-
-request({
-  url : 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(argv.address),
-  json : true
-},
-(error, response, body) => {
-  //console.log(JSON.stringify(body, undefined, 2));
-  console.log(`Address: ${body.results[0].formatted_address}`);
-  console.log(`latitude: ${body.results[0].geometry.location.lat} \nlongitude: ${body.results[0].geometry.location.lng}`)
-  //console.log(JSON.stringify(response, undefined, 2));
+//utilizing callbacks
+geocode.geocodeAddress(argv.address, (errorMessage, geoinfo) =>
+{
+  if (errorMessage)
+  {
+    console.log(errorMessage);
+  } else {
+     geocode.getWeather(geoinfo, (errorMessage, results) =>
+   {
+     if (errorMessage)
+     {
+       console.log(errorMessage);
+     } else {
+       console.log(JSON.stringify(results, undefined, 2));
+     }
+   });
+  }
 });
+
+
+
+
+
+/*********************************************notes********************************///
+//learned how to use callbacks and asynchronous nature of node
+
+/*
+dark sky forecast API
+key : 5f6bbd27b86b05d69bfffa430c42db4b
+*/
+
+/*
+https://api.darksky.net/forecast/5f6bbd27b86b05d69bfffa430c42db4b/LATITUDE,LONGITUDE
+*/
 
 //console.log(argv);
 //console.log(argv._[0]);
+/*
+var encodedAddress = encodeURIComponent(argv.address)
+request({
+  url : 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodedAddress,
+  json : true
+},
+(error, response, body) => {
+  //error checking
+if (error) {
+    console.log('unable to connect to Google Servers');
+} else if (body.status === 'ZERO_RESULTS') {
+  console.log('Request Failed: Unable to find address');
+} else if (body.status === 'OK') {
+  //console.log(JSON.stringify(body, undefined, 2));
+  console.log(`Address: ${body.results[0].formatted_address}\nlatitude: ${body.results[0].geometry.location.lat} \nlongitude: ${body.results[0].geometry.location.lng}`);
+  //console.log(JSON.stringify(response, undefined, 2));
+}
+});
+*/
 
 
 /*
