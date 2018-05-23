@@ -36,7 +36,7 @@ var getWeather = (geoinfo, callback) => {
       if(error || response.statusCode !== 200) {
         callback('Error: unable to fetch weather data')
       }else {
-      callback(undefined, JSON.parse(body).currently);
+      callback(undefined,Object.assign(geoinfo, JSON.parse(body).currently));
     }
     });
   } else{
