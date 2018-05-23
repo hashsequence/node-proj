@@ -14,25 +14,9 @@ const argv = yargs
 .alias('help','h')
 .argv;
 //utilizing callbacks
-geocode.geocodeAddress(argv.address, (errorMessage, geoinfo) =>
-{
-  if (errorMessage)
-  {
-    console.log(errorMessage);
-  } else {
-     geocode.getWeather(geoinfo, (errorMessage, results) =>
-   {
-     if (errorMessage)
-     {
-       console.log(errorMessage);
-     } else {
-       console.log(JSON.stringify(results, undefined, 2));
-     }
-   });
-  }
-});
 
-
+geocode.getWeatherInfo(argv.address);
+geocode.asyncGetWeatherInfo(argv.address);
 
 
 
