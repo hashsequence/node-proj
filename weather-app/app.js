@@ -13,7 +13,6 @@ const argv = yargs
 .help()
 .alias('help','h')
 .argv;
-//utilizing callbacks
 
 geocode.getWeatherInfo(argv.address);
 geocode.asyncGetWeatherInfo(argv.address);
