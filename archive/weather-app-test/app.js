@@ -17,7 +17,7 @@ const argv = yargs
 
 geocode.getWeatherInfo(argv.address);
 geocode.asyncGetWeatherInfo(argv.address);
-
+geocode.axiosGetWeatherInfo(argv.address);
 
 
 /*********************************************notes********************************///

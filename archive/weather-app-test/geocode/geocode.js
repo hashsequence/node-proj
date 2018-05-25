@@ -1,4 +1,6 @@
 const request = require('request');
+const axios = require('axios');
+
 const FORCAST_KEY = '5f6bbd27b86b05d69bfffa430c42db4b';
 /*********************************
  Using Callbacks
@@ -40,7 +42,7 @@ var getWeather = (geoinfo, callback) => {
       if(error || response.statusCode !== 200) {
         callback('Error: unable to fetch weather data')
       }else {
-      callback(undefined,Object.assign({version : 'callback version'}, geoinfo, JSON.parse(body).currently));
+      callback(undefined,Object.assign({version : 'callback'}, geoinfo, JSON.parse(body).currently));
       }
     });
   } else{
@@ -62,7 +64,7 @@ var getWeatherInfo = (address) =>
        {
          console.log(errorMessage);
        } else {
-         console.log(JSON.stringify(results, undefined, 2));
+         console.log(JSON.stringify(results, undefined, 2).replace(/\{|\}|\"|\,/gi, ""));
        }
      });
     }
@@ -109,7 +111,7 @@ var asyncGetWeather = (geoinfo) => {
           if(error || response.statusCode !== 200) {
             reject('Error: unable to fetch weather data')
           }else {
-          resolve(Object.assign({version : 'async version'}, geoinfo, JSON.parse(body).currently));
+          resolve(Object.assign({version : 'async'}, geoinfo, JSON.parse(body).currently));
           }
       //  }));
       });
@@ -129,17 +131,48 @@ var asyncGetWeatherInfo = (address) =>
     });
   }).then((res) =>
     {
-      console.log(JSON.stringify(res, undefined, 2));
+      console.log(JSON.stringify(res, undefined, 2).replace(/\{|\}|\"|\,/gi, ""));
     },(errorMessage) => {
       console.log(errorMessage);
     });
 };
 
 
+/******************using axios******************************/
+var axiosGetWeatherInfo = (address) => {
+  var axiosEncodedAddress = encodeURIComponent(address);
+  var axiosGeocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + axiosEncodedAddress;
+  var axiosGeoInfo = {};
+  axios.get(axiosGeocodeUrl).then((response) => {
+    if (response.data.status === 'ZERO_RESULTS') {
+      throw new Error('Unable to find that address.');
+    }
+
+      axiosGeoInfo['address'] = response.data.results[0].formatted_address;
+      axiosGeoInfo['latitude'] = response.data.results[0].geometry.location.lat;
+      axiosGeoInfo['longitude'] = response.data.results[0].geometry.location.lng;
+
+
+    var axiosWeatherUrl =  `https://api.darksky.net/forecast/${FORCAST_KEY}/${axiosGeoInfo.latitude},${axiosGeoInfo.longitude}`;
+    return axios.get(axiosWeatherUrl);
+  }).then((response) => {
+    var axiosWeatherInfo = response.data.currently;
+    console.log(JSON.stringify(Object.assign({version : 'axios'}, axiosGeoInfo,axiosWeatherInfo), undefined, 2).replace(/\{|\}|\"|\,/gi, ""));
+  }).catch((e) => {
+    if (e.code === 'ENOTFOUND') {
+      console.log('Unable to connect to API servers.');
+    } else {
+      console.log(e.message);
+    }
+
+  });
+
+};
 
 
 module.exports = {
   geocodeAddress : geoAddress,
   getWeatherInfo : getWeatherInfo,
-  asyncGetWeatherInfo : asyncGetWeatherInfo
+  asyncGetWeatherInfo : asyncGetWeatherInfo,
+  axiosGetWeatherInfo : axiosGetWeatherInfo
 };
