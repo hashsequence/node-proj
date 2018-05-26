@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 
   res.render('maintenance.hbs', {
     myTitle: 'Avery\'s Profile Maintenance Page',
-    pageTitle: 'This page displays basic information about Avery from the Backup'
+    pageTitle: 'This page displ ays basic information about Avery from the Backup'
   });
 
 
