@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title> help </title>
+<meta charset="UTF-8">
+<style>
+
+#wrapper {
+  width: 960 px;
+  margin: 0 auto;
+}
+
+#main {
+  float : left;
+  width : 520px;
+  margin-top: 0;
+  margin-left: 0;
+  margin-right : 20px;
+  background-color: #33b5e5;
+}
+
+
+#links {
+  float: left;
+  width : 200px;
+  margin-top: 0;
+  margin-left: 0px;
+  background-color: yellow;
+}
+
+#footer {
+  clear : left;
+}
+
+p {
+  color : red;
+}
+</style>
+</head>
+
+<body>
+<div id="wrapper">
+  <div id="header"> <p>{{screamIt myTitle}}</p> <p>{{pageTitle}}</p></div>
+  {{> main}}
+  <div id="links"> the link to my linkedin <a href="https://www.linkedin.com/in/avery-wong-a59b2071/">linkedin</a></div>
+  {{> footer}}
+</div>
+
+</body>
+</html>
