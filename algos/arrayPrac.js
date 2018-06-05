@@ -252,6 +252,138 @@ function oneAway (s1, s2) {
   }
   return (count === 1);
 }
+
+function trim(arr) {
+  for (var i = 0; i < arr.length; i++) {
+
+  }
+}
+
+/************************************************
+URLify: converts string into url by replacing single spaces
+with %20 and removing trailing spaces. Assumption is
+that array has enough space for new string
+************************************************/
+//practice C style with javascript
+function URLify(s) {
+  var arrStr = s.split('');
+  var i = 0;
+  var space_count = 0;
+  //count spaces and find current length
+  for (i = 0; arrStr[i]; i++) {
+    if(arrStr[i] ===' ') {
+      space_count++;
+    }
+  }
+
+  //removing trailing spaces
+  while(arrStr[i-1] === ' ') {
+    space_count--;
+    i--;
+  }
+
+  //find the new lengths
+  var new_length = i + space_count*2 + 1;
+
+  //start filling character array from end;
+  var index = new_length - 1;
+  arrStr[index--] = '\0';
+
+  //fill the rest of the string from second
+  for (var j = i-1 ; j>=0; j--) {
+    //console.log(arrStr);
+    if(arrStr[j] === ' ') {
+      arrStr[index] = '0';
+      arrStr[index-1] = '2';
+      arrStr[index-2] = '\%';
+      index = index - 3;
+    } else {
+      arrStr[index] = arrStr[j];
+      index--;
+    }
+  }
+  //console.log(arrStr);
+  return arrStr.join('');
+}
+
+/*************************************************************
+string compression: implement a method to perform basic string stringCompression
+using the counts of repeated characters. for example:
+aabcccccaaa -> a2bc5a3
+assume string contains ony alphabetical characters case-sensitive
+practice in C-style
+*************************************************************/
+
+var stringCompression = (s) => {
+
+  var arr = s.split("");
+  var read = 0;
+  var write = 0;
+  var anchor = 0;
+  for (read = 0; read < arr.length; read++){
+    if(read + 1 == arr.length || arr[read + 1] != arr[read] ) {
+      arr[write] = s[anchor];
+      write++;
+      if(read > anchor) {
+        var n = read - anchor + 1;
+        var digits = (""+n).split("");
+        for (var i = 0; i < digits.length; i++) {
+          arr[write] = digits[i];
+          write++;
+        }
+      }
+      anchor = read + 1;
+    }
+  }
+//  console.log(arr);
+  return arr.slice(0,write).join("");
+}
+/****************************************
+rotateMatrix : rotate nxn Matrix
+
+*****************************************/
+
+function Matrix(rows, cols) {
+  this.rows = rows;
+  this.cols = cols
+  this.arr = new Array(rows);
+  for (var i = 0; i < rows; i++) {
+    this.arr[i] = new Array(cols);
+  }
+}
+
+
+function helperRotateMatrix(matrix, start, end) {
+
+  if (start >  end) {
+    return matrix;
+  }
+  var temp1;
+  var temp2;
+  var length = end - start;
+  for(var i = start; i < end - 1 ; i++) {
+        temp1 = matrix.arr[i+start][length-1+start];
+        matrix.arr[i+start][length-1+start] = matrix.arr[start][i+start];
+        temp2 = matrix.arr[length-1+start][length-1-i+start]
+        matrix.arr[length-1+start][length-1-i+start] = temp1;
+        temp1 = matrix.arr[length-1-i+start][0+start];
+        matrix.arr[length-1-i+start][+start] = temp2;
+        matrix.arr[0+start][i+start] = temp1;
+      }
+    console.log(start+1,end-1);
+    helperRotateMatrix(matrix, start+1, end-1);
+    return matrix;
+}
+
+function rotateMatrix(matrix) {
+
+  if (matrix.arr.rows !== matrix.arr.cols || matrix === undefined || matrix === null) {
+    return matrix;
+  } else {
+    return helperRotateMatrix(matrix, 0, matrix.rows);
+  }
+}
+
 function test1() {
   var s = 'dancemyfriendsandrejoice';
   console.log(s);
@@ -279,9 +411,37 @@ function test1() {
   console.log('is d one away from <empty string>',oneAway('d', ''));
   console.log('is <empty string> one away from <empty string>', oneAway('', ''));
   console.log('is daa one away from ada', oneAway('daa', 'ada'));
+  console.log('URLify \"Mr John Smith   \"', URLify("Mr John Smith   "));
 }
+
+var test2 = () => {
+  console.log("aaabvvvvcdeeed : ",stringCompression("aaabvvvvcdeeed"));
+  console.log(" : ",stringCompression(""));
+  console.log(" a: ",stringCompression("a"));
+  console.log(" ab: ",stringCompression("ab"));
+  console.log(" aab: ",stringCompression("aab"));
+  var testMatrix = new Matrix(4,4);
+  testMatrix.arr = [[1,2,3,4],
+                        [5,6,7,8],
+                        [9,10,11,12],
+                        [13,14,15,16]];
+console.log(testMatrix);
+console.log(rotateMatrix(testMatrix));
+var testMatrix2 = new Matrix(5,5);
+testMatrix2.arr = [[1,2,3,4,5],
+                  [6,7,8,9,10],
+                  [11,12,13,14,15],
+                  [16,17,18,19,20],
+                  [21,22,23,24,25]];
+console.log(testMatrix2);
+console.log(rotateMatrix(testMatrix2));
+
+
+}
+
 
 function main() {
 test1();
+test2();
 }
 main();
