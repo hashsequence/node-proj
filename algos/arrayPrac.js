@@ -355,7 +355,7 @@ function Matrix(rows, cols) {
 
 function helperRotateMatrix(matrix, start, end) {
 
-  if (start >  end) {
+  if (start >= end) {
     return matrix;
   }
   var temp1;
@@ -370,7 +370,6 @@ function helperRotateMatrix(matrix, start, end) {
         matrix.arr[length-1-i+start][+start] = temp2;
         matrix.arr[0+start][i+start] = temp1;
       }
-    console.log(start+1,end-1);
     helperRotateMatrix(matrix, start+1, end-1);
     return matrix;
 }
